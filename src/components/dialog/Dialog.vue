@@ -9,39 +9,28 @@
           <div class="dialog-message">{{ message }}</div>
         </div>
         <div class="dialog-btns">
-          <button class="btn cancel" @click="cancelAction">{{ cancelButtonText }}</button>
-          <button class="btn confirm" @click="confirmAction">{{ confirmButtonText }}</button>
+          <button class="btn cancel" v-show="showCancelButton" @click="cancelAction">{{ cancelButtonText }}</button>
+          <button class="btn confirm"  v-show="showConfirmButton" @click="confirmAction">{{ confirmButtonText }}</button>
         </div>
       </div>
     </transition>
-    <div class="dialog-mask" v-show="visible"></div>
+    <div class="dialog-mask"></div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'dialogComponent',
-  props: {
-    title: {
-      type: String,
-      default: '提示'
-    },
-    message: {
-      type: String,
-      required: true
-    },
-    cancelButtonText: {
-      type: String,
-      default: '取消'
-    },
-    confirmButtonText: {
-      type: String,
-      default: '确定'
-    }
-  },
   data () {
     return {
-      visible: true
+      visible: false,
+      showConfirmButton: true,
+      showCancelButton: false,
+      message: '',
+      title: '',
+      cancelButtonText: '',
+      confirmButtonText: '',
+      callback: null
     }
   },
   methods: {
@@ -52,18 +41,24 @@ export default {
       e.preventDefault()
       this.$emit('cancel')
     },
-    confirmAction () {}
+    confirmAction (e) {
+      e.preventDefault()
+      let callback = this.callback
+      this.$emit('cancel')
+      this.callback && callback()
+    }
   }
 }
 </script>
 
 <style scoped>
   .scale-enter-active, .scale-leave-active {
-    transition: all 5s
+    transition: opacity .3s;
+    -webkit-transition: opacity .3s;
   }
   .scale-enter, .scale-leave-to {
     opacity: 0;
-    transform: translate3d(-50%,-50%,0) scale(0.2);
+    /*transform: translate3d(-50%, -50%, 0) scale(0.7);*/
   }
   .dialog-wrapper {
     position: absolute;
@@ -74,18 +69,16 @@ export default {
     position: fixed;
     top: 50%;
     left: 50%;
-    -webkit-transform: translate3d(-50%,-50%,0);
-    transform: translate3d(-50%,-50%,0);
+    transform: translate3d(-50%, -50%, 0);
     background-color: #fff;
     width: 75%;
+    max-width: 300px;
     border-radius: 3px;
     font-size: 16px;
     -webkit-user-select: none;
     overflow: hidden;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-transition: .2s;
-    transition: .2s;
     box-sizing: border-box;
     z-index: 1;
   }

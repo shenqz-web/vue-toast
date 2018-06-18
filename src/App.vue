@@ -8,6 +8,7 @@
       <button @click="toast3">点击弹出带有 icon 的 Toast</button>
       <button @click="indicator">点击弹出加载动画 Indicator</button>
       <button @click="alertFn">点击弹出alert提示框</button>
+      <button @click="confirmFn">点击弹出confirm提示框</button>
     </div>
   </div>
 </template>
@@ -57,7 +58,12 @@ export default {
       }, 3000)
     },
     alertFn () {
-      this.$dialog({
+      this.$dialog.alert({
+        message: '操作成功'
+      })
+    },
+    confirmFn () {
+      this.$dialog.confirm({
         message: '操作成功'
       })
     }
